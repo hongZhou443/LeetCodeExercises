@@ -1,0 +1,38 @@
+Given a string s, find the length of the longest substring without repeating characters.
+
+class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        Set<Character> characters = new HashSet<>();
+        int max = 0;
+        
+        for(int i = 0; i < s.length(); i ++){
+            while(characters.contains(s.charAt(i))){
+                if(characters.size() > max){
+                    max = characters.size();
+                }
+                
+                characters.remove(s.charAt(i - characters.size()));
+            }
+            
+            characters.add(s.charAt(i));
+        }
+        
+        if(characters.size() > max){
+            return characters.size();
+        }
+        
+        return max;
+    }
+}
+
+Set keeps track of characters in the substring. Note: We do not need to keep track of the actual substring, only the characters within. When the string traversal encounters a repeat character, we compare whether the length of the substring has reached a new maximum.
+
+If it is a new maximum, set the max to the size of set. Then, remove characters from the set in the order they were encountered. Then, add the new character to the set. When the traversal ends, check the size of the set again and return max size.
+
+Addendums:
+The substring is not stored in a separate string to reduce data usage.
+
+A hashset is used instead of a treeset because we have another reference to the order the characters were encountered (i - characters.size()). Therefore, a hashset is used to reduce data usage.
+
+Runtime 7ms faster than 50.06%
+Memory Usage 39.1 MB less than 83.28%
