@@ -21,3 +21,8 @@ class solution{
         
     }
 }
+
+Basic array traversal. Compares the first element with every other element that comes after. Data is saved in res array to save data usage. Could be optimized via if statements ensuring that numbers greater than target are not tested.
+
+Runtime 0ms faster than 100%
+Memory Usage 39.1 MB less than 75.61%
