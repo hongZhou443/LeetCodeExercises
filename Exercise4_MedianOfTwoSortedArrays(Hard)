@@ -1,0 +1,79 @@
+Given two sorted arrays nums1 and nums2 of size m and n respectively, return the median of the two sorted arrays.
+
+Follow up: The overall run time complexity should be O(log (m+n)).
+
+class Solution {
+    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        if(nums1 == null || nums1.length == 0){
+            if(nums2.length % 2 == 1){
+                return nums2[nums2.length / 2];
+            }
+            
+            return (double)(nums2[(nums2.length - 1)/2] + nums2[(nums2.length - 1)/2 + 1]) / 2;
+        }
+        
+        if(nums2 == null || nums2.length == 0){
+            if(nums1.length % 2 == 1){
+                return nums1[nums1.length / 2];
+            }
+            
+            return (double)(nums1[(nums1.length - 1)/2] + nums1[(nums1.length - 1)/2 + 1]) / 2;
+        }
+        
+        int midpt = (nums1.length + nums2.length) / 2;
+        int p1 = 0;
+        int p2 = 0;
+        int count = 0;
+        
+        boolean currentPointer = nums1[p1] < nums2[p2];
+        double num1 = currentPointer ? nums1[p1] : nums2[p2];
+        
+        while(count < midpt && p1 < nums1.length && p2 < nums2.length){
+            
+            if(nums1[p1] < nums2[p2]){ 
+                if(p1 < nums1.length - 1){
+                    p1++;
+                    currentPointer = nums1[p1] < nums2[p2];
+                } else{
+                    if(!currentPointer){
+                        p2++;
+                    }
+                    currentPointer = false;
+                }
+            } else{
+                if(p2 < nums2.length - 1){
+                    p2++;
+                    currentPointer = nums1[p1] < nums2[p2];
+                } else{
+                    if(currentPointer){
+                        p1++;
+                    }
+                    currentPointer = true;
+                }
+            }
+            
+            if(count == midpt - 2){
+                num1 = currentPointer ? nums1[p1] : nums2[p2];
+            }
+            
+            count++;
+        }
+        
+        if((nums1.length + nums2.length) % 2 == 1){
+            return currentPointer ? nums1[p1] : nums2[p2];
+        } else{
+            return (num1 + (currentPointer ? nums1[p1] : nums2[p2])) / 2;
+        }
+    }
+}
+
+First, test the edgecases in which either of the Arrays are null or have a length of 0. Then, abstractly merge the two different arrays.
+
+Variables p1 and p2 are used to keep track of the indexes of nums1 and nums2 repectively. CurrentPointer is used to keep track of the current index.
+
+There are two possibilites regarding the calculation of the median: if there are an odd number of integers, then the median is at the index midpt. If there are an even number of integers however, then the median is the average of two numbers. These two possibilites are accounted for in the last two if statements.
+
+The overall runtime is O(Log(m + n)) since the number of operations done is half of the data size. This proportion is maintained as data size increases.
+
+Runtime 2ms faster than 99.81%
+Memory Usage 40.1 MB less than 70.78%
