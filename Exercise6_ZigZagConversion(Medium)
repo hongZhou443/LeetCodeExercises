@@ -1,0 +1,62 @@
+The string "PAYPALISHIRING" is written in a zigzag pattern on a given number of rows like this: (you may want to display this pattern in a fixed font for better legibility)
+
+P   A   H   N
+A P L S I I G
+Y   I   R
+And then read line by line: "PAHNAPLSIIGYIR"
+
+Write the code that will take a string and make this conversion given a number of rows:
+
+class Solution {
+    public String convert(String s, int numRows) {
+        
+        if(numRows == 1){
+            return s;
+        }
+        
+        String res = "";
+        int cycLength = numRows * 2 - 2;
+        
+        for(int i = 0; i < numRows; i ++){
+            for(int j = i; j < s.length(); j += cycLength){
+                res += s.substring(j, j+1);
+                int step = (numRows - 1 - i) * 2;
+                if(i != 0 && i != numRows - 1 && j + step < s.length()){
+                    res += s.substring(j + step, j + step + 1);
+                }
+            }
+        }
+        
+        return res;
+    }
+    
+}
+
+There is a pattern to which row a letter is in. Say that numRows = 3, then the distribution of rows will look like this : 1232123212321, and so on.
+
+We can take advantage of this. Each cycle of the pattern (12321) to get back to the same row is 2 * numRows - 2 (you can see how it takes 4 steps to get back to one with 3 rows).
+
+And if the row isn't the top most row or the bottom most row, we encounter that row twice in one cycle (2 appears twice in 12321). So, we can simply add this.
+
+In this case the distance to the next character in the same row is dependent on how far away from numRows the current row is. Say numRows = 4, then the patterning would be as follows:
+
+[1] [2] [3] [4] [3] [2] [1]
+ 0   1   2   3   4   5   6
+
+and so on.
+
+Notice how it takes 4 steps from the first 2 to the second 2, but it only takes 2 steps from the first three to get to the second three. This is because 3 is closer to the center of the pattern, which is numRows (in this case 4). 
+This pattern reveals itself to be the distance from the center of the pattern (numRows) times 2. Or in terms of variables:
+
+(numRows - i) * 2.
+
+However since we start at index 0, and not 1, we correct for this by subtracting 1 before the multiplication to give us this:
+
+step = (numRows - i - 1) * 2
+
+And so, we loop through the entire String going by each row (i) and append every occurence of that row (j) to the result.
+
+The algorithm's runtime should be O(n), since we are only visiting each data point once.
+
+Runtime 9ms faster than 46.90%
+Memory Usage 39.6 MB less than 67.34%
